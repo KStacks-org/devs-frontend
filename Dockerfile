@@ -5,11 +5,8 @@ COPY package.json package-lock.json ./
 RUN npm ci
 
 COPY . .
-ARG VITE_API_URL
-ARG VITE_USE_MOCKS=false
-ENV VITE_API_URL=${VITE_API_URL}
-ENV VITE_USE_MOCKS=${VITE_USE_MOCKS}
-RUN npm run build
+ARG BUILD_MODE=prod
+RUN npm run build -- --mode "$BUILD_MODE"
 
 FROM node:24-alpine AS runner
 WORKDIR /app

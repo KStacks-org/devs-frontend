@@ -97,13 +97,14 @@ Vite variables are embedded at build time. Changing them on a running container 
 
 ## 🐳 Delivery
 
-The multi-stage Dockerfile installs from `package-lock.json`, builds Nitro output, runs as the unprivileged Node user, and includes a health check. GitHub Actions validates pull requests and pushes to `master`, then publishes an immutable multi-architecture image such as:
+The multi-stage Dockerfile installs from `package-lock.json`, builds Nitro output, runs as the unprivileged Node user, and includes a health check. GitHub Actions validates dev/prod pull requests and builds both image variants. Pushes publish images such as:
 
 ```text
-ghcr.io/kstacks-org/devs-frontend:master-<short-sha>
+ghcr.io/kstacks-org/devs-frontend:dev-<short-sha>
+ghcr.io/kstacks-org/devs-frontend:prod-<short-sha>
 ```
 
-Set the GitHub repository variable `VITE_API_URL` before publishing. No runtime credentials or R2 keys belong in this repository or image.
+Public deployment settings live in `.env.dev` and `.env.prod`. The shared org workflow builds both image variants with `BUILD_MODE=dev` and `BUILD_MODE=prod`; update those files for the actual API origins before deployment. No runtime credentials or R2 keys belong in this repository or image.
 
 The eventual KStacks GitOps handoff should update the matching deployment in the separate infrastructure repository. It remains disabled until that manifest and an `INFRA_PAT` with only the required repository access exist.
 
@@ -118,4 +119,4 @@ The eventual KStacks GitOps handoff should update the matching deployment in the
 
 ## 🤝 Contributing
 
-Branch from `master`, preserve bilingual and RTL behavior, use the shared design system, and run `npm run check` plus relevant Playwright tests before opening a pull request.
+Branch from `dev`, preserve bilingual and RTL behavior, use the shared design system, and run `npm run check` plus relevant Playwright tests before opening a pull request.
